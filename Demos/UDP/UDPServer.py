@@ -1,5 +1,7 @@
 # Include the socket module
 from socket import *
+
+# Declare and initialize server variables
 serverPort = 12000
 
 # Create a UDP socket

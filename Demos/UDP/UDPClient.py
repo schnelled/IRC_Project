@@ -14,7 +14,7 @@ message = input('Input lowercase sentence:')
 # Send the UDP message encoded to the server
 clientSocket.sendto(message.encode(), (serverName, serverPort))
 
-# Recieve the UDP message from the server
+# Recieve the UDP message from the server in 2kB size packets
 modifiedMessage, serverAddress = clientSocket.recvfrom(2048)
 
 # Display the decoded UDP message
