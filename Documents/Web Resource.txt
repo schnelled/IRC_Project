@@ -3,3 +3,12 @@ Python - Network
 https://www.tutorialspoint.com/python/python_networking.htm
 First Accessed: 5/11/18
 -------------------------------------------------------------------------------
+"PyMOTW-3"
+TCP/IP Client and Server
+https://pymotw.com/3/socket/tcp.html
+First Accessed: 5/11/18
+-------------------------------------------------------------------------------
+"Python Tips - Your daily dose of bit sized python tips"
+Python socket network programming
+https://pythontips.com/2013/08/06/python-socket-network-programming/
+First Accessed: 5/11/18
