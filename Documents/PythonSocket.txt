@@ -32,9 +32,11 @@ Server Socket Methods:
     -> Bind address (hostname, port number pair) to the socket
   socket.listen()
   socket.accept()
+    -> Passively accept TCP client connection, waiting until connection arrives
 
 Client Socket Methods:
   socket.connect()
+    -> Actively initiates TCP server connection
 
 General Socket Methods:
   socket.recv()
