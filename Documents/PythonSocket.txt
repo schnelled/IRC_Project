@@ -1,0 +1,48 @@
+Python provides two levels of access to network services:
+  * Low-Level:  Access the basic socket support in the underlying OS, which
+                allows for the implementation of both clients and servers for
+                both connection-oriented (TCP) & connectionless (UDP).
+  * High-Level: Access to specific application-level network protocols, such as
+                FTP, HTTP, and so on.
+
+Socket: Are the endpoints of bidirectional communication channel and they may
+        communicate within a process, between processes on the same machine, or
+        between processes on different continents.
+
+Channel Types: Unix domain socket, TCP, UDP, ect...
+
+-------------------------------------------------------------------------------
+Domain:   The family of protocols that is used as the transport mechanism
+              -> AF_INET: Addresses from the Internet (IP)
+Type:     Type of communication between the two endpoints.
+              -> SOCK_STREAM: connection-oriented protocols
+              -> SOCK_DGRAM: connectionless protocols
+Protocol: Used to identify a variant of a protocol within a domain & type.
+Hostname: The identifier of a network interface.
+Port:     May be a Fixnum port number, a string containing a port number, or
+          the name of a service.
+
+Socket Module:
+  socket(socket_family, socket_type, protocol=0)
+      -> socket_family = domain (from above)
+      -> socket_type = type (from above)
+
+Server Socket Methods:
+  socket.bind()
+    -> Bind address (hostname, port number pair) to the socket
+  socket.listen()
+  socket.accept()
+
+Client Socket Methods:
+  socket.connect()
+
+General Socket Methods:
+  socket.recv()
+  socket.send()
+  socket.recvfrom()
+    -> Receive UDP messages
+  socket.sendto()
+    -> Transmits UDP messages
+  socket.close()
+    -> Clost the socket
+  socket.gethostname()
