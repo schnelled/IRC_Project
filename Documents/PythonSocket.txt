@@ -48,3 +48,13 @@ General Socket Methods:
   socket.close()
     -> Clost the socket
   socket.gethostname()
+
+-------------------------------------------------------------------------------
+Blocking Vs. Non-blocking:
+  Blocking(TCP sockets): Programs don't regain control until either the
+                         connection is made, or an error occurs. The process
+                         of waiting for data to appear.
+  Non-Blocking: Never have to wait for an operation to complete. Useful tool
+                when switching between many different connected sockets and we
+                want none of them to "lock-up."
+NOTE: "Non-Blocking" mode is set by changing one of the socket's "flags". 
