@@ -12,3 +12,13 @@ First Accessed: 5/11/18
 Python socket network programming
 https://pythontips.com/2013/08/06/python-socket-network-programming/
 First Accessed: 5/11/18
+-------------------------------------------------------------------------------
+"University of California, Davis"
+Introduction to Network Programming with Python
+http://thefengs.com/wuchang/courses/cs594/PyNet.pdf
+First Accessed: 5/12/18
+-------------------------------------------------------------------------------
+"RPG IV Socket Tutorial"
+6.5 Blocking vs. Non-Blocking Sockets
+https://www.scottklement.com/rpg/socktut/nonblocking.html
+First Accessed: 5/12/18
