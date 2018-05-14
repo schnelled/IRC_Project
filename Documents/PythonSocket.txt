@@ -57,4 +57,17 @@ Blocking Vs. Non-blocking:
   Non-Blocking: Never have to wait for an operation to complete. Useful tool
                 when switching between many different connected sockets and we
                 want none of them to "lock-up."
-NOTE: "Non-Blocking" mode is set by changing one of the socket's "flags". 
+NOTE: "Non-Blocking" mode is set by changing one of the socket's "flags".
+
+-------------------------------------------------------------------------------
+Basic Client Steps:
+  1. Create a socket
+  2. Connect to remote server
+  3. Send some data
+  4. Receive a reply
+
+Basic Server Steps:
+  1. Open a socket
+  2. Bind to address(and port)
+  3. Listen for incoming connections
+  4. Accept connections
