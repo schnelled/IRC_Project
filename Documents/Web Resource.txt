@@ -22,3 +22,13 @@ First Accessed: 5/12/18
 6.5 Blocking vs. Non-Blocking Sockets
 https://www.scottklement.com/rpg/socktut/nonblocking.html
 First Accessed: 5/12/18
+-------------------------------------------------------------------------------
+"Internet Engineering Task Force"
+Internet Relay Chat Protocol RFC: 1459
+https://tools.ietf.org/html/rfc1459
+First Accessed: 5/14/18
+-------------------------------------------------------------------------------
+"Binary Tides - Coding, Software, Tech, and Reviews"
+Python socket - chat server & client with code example
+https://www.binarytides.com/code-chat-application-server-client-sockets-python/
+First Accessed: 5/14/18
