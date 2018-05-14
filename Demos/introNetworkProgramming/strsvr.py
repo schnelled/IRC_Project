@@ -33,6 +33,10 @@ nc = 2
 for i in range(nc):
     (clnt,ap) = lstn.accept()
 
+    # Diplay the connection information
+    print "Client is at ", ap
+
+
     # Set this new socket to nonblocking mode
     clnt.setblocking(0)
     cs.append(clnt)
@@ -52,6 +56,7 @@ while (len(cs) > 0):
             cs.remove(clnt)
         v += k
         clnt.send(v)
+        print "Sending: ", v
     except:
         pass
 
@@ -59,4 +64,4 @@ while (len(cs) > 0):
 lstn.close()
 
 # Display the final value
-print 'The final value of v is', v
+print "The final value of v is: ", v

@@ -13,21 +13,21 @@ import socket, sys
 # Create a TCP socket
 clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
- # Initialize the host name and port
- host = sys.arg[1]                  # Server address
- port = int(sys.arg[2])             # Server port
+# Initialize the host name and port
+host = sys.argv[1]                  # Server address
+port = int(sys.argv[2])             # Server port
 
- # Create a TCP connection
- clientSocket.connect((host, port))
+# Create a TCP connection
+clientSocket.connect((host, port))
 
- while True:
-     # Obtain the letter
-     k = raw_input('enter a letter')
-     clientSocket.send(k)           # Send k to the server
+while True:
+    # Obtain the letter
+    k = raw_input("enter a letter:")
+    clientSocket.send(k)           # Send k to the server
 
-     # if stop signal, then leave loop
-     if k == '':
-         break
+    # if stop signal, then leave loop
+    if k == '':
+        break
 
     # Recieve v from server (up to 1024 bytes)
     v = clientSocket.recv(1024)
