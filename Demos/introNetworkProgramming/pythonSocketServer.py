@@ -2,6 +2,7 @@
 
 import socket   #for sockets
 import sys      #for exit
+from thread import *
 
 HOST = ''       #symbolic name meaning all available interfaces
 PORT = 8888     #arbitrary non-privileged port
@@ -33,23 +34,37 @@ serverSocket.listen(10)
 # Display the server is listening for connections
 print 'Socket now listening'
 
-# Keep talking with the client connection
+# Function for handling connections
+def clientthread(conn):
+    # Send message to connected to client
+    conn.send('Welcome to the server. Type something and hit enter\n')
+
+    #infinite loop so that function don't terminate and threads don't end
+    while True:
+
+        # Receive data from the client
+        data = conn.recv(1024)
+        reply = 'OK...' + data
+
+        # Make sure the data isn't NULL
+        if not data:
+            break
+
+        # Reply to the client
+        conn.sendall(reply)
+
+    # Came out of loop
+    conn.close()
+
+# Now keep talking with the client
 while True:
     # Wait to accept a connection - blocking call
     conn, addr = serverSocket.accept()
     # Display client information
     print 'Connected with ' + addr[0] + ':' + str(addr[1])
 
-    # Receive data from the client
-    data = conn.recv(1024)
-    reply = 'OK...' + data
+    # Start new thread takes 1st arguement as a function name
+    # to be run, second is the tuple of arguements to the function
+    start_new_thread(clientthread, (conn,))
 
-    # Make sure the data isn't NULL
-    if not data:
-        break
-
-    # Reply to the client
-    conn.sendall(reply)
-
-conn.close()
 serverSocket.close()
