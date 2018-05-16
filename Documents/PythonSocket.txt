@@ -71,3 +71,12 @@ Basic Server Steps:
   2. Bind to address(and port)
   3. Listen for incoming connections
   4. Accept connections
+
+The chat server does the following things:
+  1. Accept multiple incoming connections for client
+  2. Read incoming messages from each client and broadcast them to all other
+     connected clients
+
+The chat client does the following 2 things:
+  1. Listen for incoming messages from the server
+  2. Check user input. If the user types in a message then send it to the server.
