@@ -1,10 +1,6 @@
 # Telnet program example
 import socket, select, string, sys
 
-def prompt():
-    sys.stdout.write('<You> ')
-    sys.stdout.flush()
-
 # Check to see if the script is being run directly or add as a module
 if __name__ == '__main__':
 
@@ -21,48 +17,44 @@ if __name__ == '__main__':
     # Try to create a socket
     try:
         # Create an AF_INET, STREAM socket (TCP)
-        clientSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     except socket.error, msg:
         # Display the error code
         print 'Failed to create socket. Error code: ' + str(msg[0]) + ' , Error message : ' + msg[1]
         sys.exit()
 
     # Set the timeout to 2 seconds
-    clientSocket.settimeout(2)
+    serverSocket.settimeout(2)
 
     # Connect to remote host
     try:
         # Connect to remote server
-        clientSocket.connect((host, port))
+        serverSocket.connect((host, port))
     except:
         # Display the error message
         print 'Unable to connect'
         sys.exit()
 
     # Connection was successful
-    print 'Connected to remote host. Start sending messages'
-    prompt()
+    print 'Connected to remote host'
 
     while True:
-        socket_list = [sys.stdin, clientSocket]
+        socket_list = [sys.stdin, serverSocket]
 
-        # Get the list sockets which are readable
         read_sockets, write_sockets, error_sockets = select.select(socket_list, [], [])
 
         for sock in read_sockets:
             # Incoming message from remote server
-            if sock = clientSocket:
+            if sock == serverSocket:
                 data = sock.recv(4096)
                 if not data:
-                    print '\nDisconnected from chat server'
+                    print 'Connection closed'
                     sys.exit()
                 else:
                     # Print data
                     sys.stdout.write(data)
-                    prompt()
 
             # User entered a message
-        else:
-            msg = sys.stdin.readline()
-            clientSocket.send(msg)
-            prompt()
+            else:
+                msg = sys.stdin.readline()
+                serverSocket.send(msg)
