@@ -4,12 +4,12 @@ import socket   # For socket
 PORT = 5000
 MAX_CLIENTS = 20
 
-#---------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 # Function:       makeSocket
 # Input(s):
 # Output:
 # Description:
-#---------------------------------------------------------------------------
+#-------------------------------------------------------------------------------
 def makeSocket(addr):
 
     # Attempt to create a socket
@@ -42,3 +42,31 @@ def makeSocket(addr):
 
     # Return the created socket
     return s
+
+# Define the lobby class
+#-------------------------------------------------------------------------------
+class Lobby:
+    # Class constructor, defines initial state of the lobby class
+    def __init__(self):
+        # Define lists to store chat rooms and room mapping
+        self.rooms = {"Red Room", "Blue Room", "Yellow Room"}
+        self.whosInTheRoom = {}
+
+# Define the room class
+#-------------------------------------------------------------------------------
+class Room:
+    # Class constructor, defines initial state of the room class
+    def __init__(self, roomName):
+        # Define list of clients in specified room and the room name
+        self.clients = {}
+        self.roomName = roomName
+
+# Define the client class
+#-------------------------------------------------------------------------------
+class Client:
+    # Class constructor, defines initial state of the client class
+    def __init__(self, socket, userName = "guest"):
+        # Define the client socket/username and set to non-blocking TCP communication
+        socket.setblocking(0)
+        self.socket = socket
+        self.userName = userName

@@ -20,3 +20,10 @@ __Optional Functionality (To be added if there is time):__
 * User has the ability to transfer files
 
 __NOTE:__ Any added features must be documented in the final documentation for the project.
+
+-------------------------------------------------------------------------
+__User Manual:__
+1) Download or clone the IRC_Project github repository
+2) Install python2 if it's not already installed
+3) Start the IRC_Server (Chat server)
+  python2 IRC_Server.py
