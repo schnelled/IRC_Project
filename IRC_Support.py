@@ -1,10 +1,11 @@
-import socket   # For socket
+import socket, sys
 
 # Declare/define constant global variables
 PORT = 5000
 MAX_CLIENTS = 20
-CLIENT_BUFFER = 4096
+BUFFER = 4096
 CONNECTION_LIST = []
+QUIT = '<$quit$>'
 
 #-------------------------------------------------------------------------------
 # Function:       makeSocket
@@ -12,11 +13,12 @@ CONNECTION_LIST = []
 # Output:
 # Description:
 #-------------------------------------------------------------------------------
-def makeSocket(hostName):
+def makeSocket():
     # Attempt to create a socket
     try:
         # Make a TCP socket with an IPv4
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # Socket error has occured
     except socket.error as msg:
         # Display and handle the error
         print 'Failed to create a socket. Error code: ' + str(msg[0]) + ' , Error message: ' + str(msg[1])
@@ -25,10 +27,21 @@ def makeSocket(hostName):
     # Set socket options
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
+    # Return the created socket
+    return s
+
+#-------------------------------------------------------------------------------
+# Function:       makeServerSocket
+# Input(s):
+# Output:
+# Description:
+#-------------------------------------------------------------------------------
+def makeServerSocket(s, hostName):
     # Attempt to bind the socket
     try:
         # Bind the socket
         s.bind((hostName, PORT))
+    # Binding error has occured
     except socket.error as msg:
         # Display and handle the error
         print 'Bind failed. Error code: ' + str(msg[0]) + ' ,Error message: ' + str(msg[1])
@@ -40,6 +53,25 @@ def makeSocket(hostName):
 
     # Return the created socket
     return s
+
+#-------------------------------------------------------------------------------
+# Function:       makeClientSocket
+# Input(s):
+# Output:
+# Description:
+#-------------------------------------------------------------------------------
+def makeClientSocket(s, hostName):
+    # Set the timeout to 2 seconds
+    s.settimeout(2)
+
+    # Attempt to connect to the remote host
+    try:
+        s.connect((hostName, PORT))
+    # Connection error has occured
+    except:
+        # Display and handle the error
+        print 'Unable to connect to ' + hostName
+        sys.exit()
 
 
 # Define the lobby class
@@ -71,3 +103,14 @@ class Client:
         socket.setblocking(0)
         self.socket = socket
         self.userName = userName
+
+    #---------------------------------------------------------------------------
+    # Function:     clientPrompt
+    # Input(s):
+    # Output:
+    # Description:
+    #---------------------------------------------------------------------------
+    def clientPrompt():
+        # Display the command prompt to the user
+        sys.sdtout.write('<' + self.userName + '> ')
+        sys.stdout.flush()
