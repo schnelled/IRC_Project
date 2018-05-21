@@ -1,9 +1,32 @@
-import IRC_Support, select
+import IRC_Support, socket, select
 from IRC_Support import Lobby, Room, Client
 
-# Create the server socket
-serverSocket = IRC_Support.makeSocket()
-serverSocket = IRC_Support.makeServerSocket(serverSocket, '')
+# Attempt to create a socket
+try:
+    # Make a TCP socket with an IPv4
+    serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# Socket error has occured
+except socket.error as msg:
+    # Display and handle the error
+    print 'Failed to create a socket. Error code: ' + str(msg[0]) + ' , Error message: ' + str(msg[1])
+    sys.exit()
+
+# Set socket options
+serverSocket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
+# Attempt to bind the socket
+try:
+    # Bind the socket
+    serverSocket.bind(('', IRC_Support.PORT))
+# Binding error has occured
+except socket.error as msg:
+    # Display and handle the error
+    print 'Bind failed. Error code: ' + str(msg[0]) + ' ,Error message: ' + str(msg[1])
+    serverSocket.close()
+    sys.exit()
+
+# Listen for a connection
+serverSocket.listen(IRC_Support.MAX_CLIENTS)
 
 # Create a lobby object
 lobby = Lobby()
