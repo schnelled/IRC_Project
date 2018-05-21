@@ -3,6 +3,8 @@ import socket   # For socket
 # Declare/define constant global variables
 PORT = 5000
 MAX_CLIENTS = 20
+CLIENT_BUFFER = 4096
+CONNECTION_LIST = []
 
 #-------------------------------------------------------------------------------
 # Function:       makeSocket
@@ -10,8 +12,7 @@ MAX_CLIENTS = 20
 # Output:
 # Description:
 #-------------------------------------------------------------------------------
-def makeSocket(addr):
-
+def makeSocket(hostName):
     # Attempt to create a socket
     try:
         # Make a TCP socket with an IPv4
@@ -27,7 +28,7 @@ def makeSocket(addr):
     # Attempt to bind the socket
     try:
         # Bind the socket
-        s.bind(('', PORT))
+        s.bind((hostName, PORT))
     except socket.error as msg:
         # Display and handle the error
         print 'Bind failed. Error code: ' + str(msg[0]) + ' ,Error message: ' + str(msg[1])
@@ -37,11 +38,9 @@ def makeSocket(addr):
     # Listen for a connection
     s.listen(MAX_CLIENTS)
 
-    # Display the successful socket creation message
-    print 'Now listening at ' + str(addr)
-
     # Return the created socket
     return s
+
 
 # Define the lobby class
 #-------------------------------------------------------------------------------
@@ -52,6 +51,7 @@ class Lobby:
         self.rooms = {"Red Room", "Blue Room", "Yellow Room"}
         self.whosInTheRoom = {}
 
+
 # Define the room class
 #-------------------------------------------------------------------------------
 class Room:
@@ -60,6 +60,7 @@ class Room:
         # Define list of clients in specified room and the room name
         self.clients = {}
         self.roomName = roomName
+
 
 # Define the client class
 #-------------------------------------------------------------------------------

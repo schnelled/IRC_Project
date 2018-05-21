@@ -26,6 +26,7 @@ __User Manual:__
 1) Download or clone the IRC_Project github repository
 2) Install python2 if it's not already installed
 3) Start the IRC_Server (Chat server)
+
 <pre>
   <div class="container">
     <div class="title">
