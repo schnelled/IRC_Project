@@ -48,7 +48,6 @@ if __name__ == '__main__':
 
             # Check for incoming message
             if sock is clientSocket:
-
                 # Recieve the message
                 message = sock.recv(IRC_Support.BUFFER)
 
@@ -58,22 +57,35 @@ if __name__ == '__main__':
                     print '\nDisconnected from chat server'
                     sys.exit()
 
-                # Display the message
-                sys.stdout.write(message)
-
-                # Check if client just entered the lobby
-                if 'Please tell us your name' in message.decode():
-                    # Change the value of the defualt prefix
-                    prefix = 'name: '
-                # Otherwise the client isn't just entering the lobby
+                # Otherwise the message is valid
                 else:
-                    # Defualt value of prefix
-                    prefix = ''
+
+                    # Check for quit message
+                    if message == IRC_Support.QUIT.encode():
+                        # Say goodbye to the client and exit
+                        sys.stdout.write('\nGoodbye, chat with you later\n')
+                        sys.exit()
+
+                    # Otherwise handle the greating or normal message states
+                    else:
+                        # Display the message
+                        sys.stdout.write(message)
+
+                        # Check if client just entered the lobby
+                        if 'Please tell us your name' in message.decode():
+                            # Change the value of the defualt prefix
+                            prefix = 'name: '
+                        # Otherwise the client isn't just entering the lobby
+                        else:
+                            # Defualt value of prefix
+                            prefix = ''
 
                 # Display the command prompt
                 prompt()
 
             #Otherwise user is sending a message
             else:
+                # Comminticate the message
                 message = prefix + sys.stdin.readline()
+                # Send the message to the server
                 clientSocket.sendall(message)

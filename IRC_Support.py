@@ -1,17 +1,24 @@
 # Helping functions and classes for the IRC
 
 # Import needed modules
-import socket
+import socket, string
 
 # Declare constant globals
 PORT = 5000
 MAX_CLIENT = 10
 CONNECTION_LIST = []
 BUFFER = 4096
+BLUE = 'blue room'
+RED = 'red room'
+YELLOW = 'yellow room'
+GREEN = 'green room'
+PURPLE = 'purple room'
+ORANGE = 'orange room'
+QUIT = '<quit>'
 
 # Instruction message
-INSTRUCTIONS = 'Instructions:\n[<rooms>] to show all avaliable rooms\n'\
-    + '[<join> room name] to join/switch to a room\n[<quit>] to quit\n'
+INSTRUCTIONS = 'Instructions:\n[#1] to show all avaliable rooms\n'\
+    + '[#2 room name] to join/switch to a room\n[#3] to quit\n'
 
 #-------------------------------------------------------------------------------
 # Function:
@@ -102,7 +109,7 @@ class Lobby:
     # Default constructor function
     def __init__(self):
         # Set the initial state
-        self.rooms = {'Red Room', 'Blue Room', 'Yellow Room'}
+        self.rooms = {RED, BLUE, YELLOW, GREEN, PURPLE, ORANGE}
         self.roomMapping = {}
 
     #---------------------------------------------------------------------------
@@ -112,6 +119,7 @@ class Lobby:
     # Description:
     #---------------------------------------------------------------------------
     def welcome(self, newClient):
+        # Send the welcome message to the user
         newClient.socket.sendall('Welcome the lobby. \nPlease tell us your name:\n')
 
     #---------------------------------------------------------------------------
@@ -120,8 +128,26 @@ class Lobby:
     # Output:
     # Description:
     #---------------------------------------------------------------------------
+    def showRooms(self, client):
+        # Display show rooms introduction message
+        message = 'Showing current rooms...\n'
+
+        # Loop through all of the listed rooms
+        for room in self.rooms:
+            # Concatinate the message with each avaliable room
+            message = message + room + '\n'
+
+        # Send the avaliable rooms to the requesting client
+        client.socket.sendall(message.encode())
+
+    #---------------------------------------------------------------------------
+    # Function:
+    # Input(s):
+    # Output:
+    # Description:
+    #---------------------------------------------------------------------------
     def handleMessage(self, client, message):
-        # Display user name and message sent
+        # Display client's name and message sent
         print client.name + " says: " + message
 
         # Check for name prefix
@@ -134,6 +160,29 @@ class Lobby:
             print 'New connection from: ' + client.name
             # Send the instructions to the user
             client.socket.sendall('\nHello ' + client.name + '\n' + INSTRUCTIONS)
+
+        # Check for the join a room command
+        elif '#1' in message:
+            # Show the rooms to the client
+            self.showRooms(client)
+
+        # Check for the list rooms command
+        elif '#2' in message:
+            print 'TEST'
+
+        # Check for the quit command
+        elif '#3' in message:
+            # Send the quit message back to the client
+            client.socket.sendall(QUIT.encode())
+
+        # Otherwise none of the options in the lobby was selected
+        else:
+            # Create invalid input message to sent back to client, with instructions
+            message = '\n\n\n\nInvalid user input. Please select one of the following instructions.\n\n'
+            message += INSTRUCTIONS
+            # Send the invalid user input message screen back
+            client.socket.sendall(message.encode())
+
 
 
 # Create the client object - a individual ID to each connection

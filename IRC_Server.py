@@ -55,9 +55,9 @@ if __name__ == '__main__':
                 # Otherwise kill the client
                 else:
                     # Close the client socket
-                    client.socket.close()
+                    newClient.socket.close()
                     # Remove client from connection list
-                    IRC_Support.CONNECTION_LIST(client)
+                    IRC_Support.CONNECTION_LIST.remove(client)
 
         #Wait for socket error
         for sock in error_sockets:
