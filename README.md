@@ -37,3 +37,16 @@ __User Manual:__
     </div>
   </div>
 </pre>
+
+4) Start the IRC_Client (Chat client)
+
+<pre>
+  <div class="container">
+    <div class="title">
+      <h4>Starting IRC_Client.py</h4>
+      <div class="code">
+        python2 IRC_Client.py
+      </div>
+    </div>
+  </div>
+</pre>
