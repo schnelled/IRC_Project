@@ -66,7 +66,7 @@ def makeServerSocket(s):
         sys.exit()
 
     # Socket binding successful
-    print 'Successful socket binding'
+    print 'Successful socket binding.
 
     # Set the number of connections that can be listened to
     s.listen(MAX_CLIENT)
