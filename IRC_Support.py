@@ -1,7 +1,7 @@
 # Helping functions and classes for the IRC
 
 # Import needed modules
-import socket, string, random
+import socket, string, random, sys
 
 # Declare constant globals
 PORT = 5000
@@ -56,17 +56,21 @@ def makeServerSocket(s):
     # Set the TCP connection to be non-blocking
     s.setblocking(0)
 
+    # Obtain the host name and IP
+    hostName = socket.gethostname()
+    IP = socket.gethostbyname(hostName)
+
     # Attempt to bind the host and port number for communication
     try:
         # Bind the host and port number
-        s.bind(('', PORT))
+        s.bind((hostName, PORT))
     except socket.error, msg:
         # Display and handle the error
         print 'Bind failed. Error code: ' + str(msg[0]) + 'Error message: ' + str(msg[1])
         sys.exit()
 
     # Socket binding successful
-    print 'Successful socket binding.
+    print 'Successful socket binded to ' + hostName + ' at IP address ' + IP
 
     # Set the number of connections that can be listened to
     s.listen(MAX_CLIENT)
