@@ -18,7 +18,7 @@ QUIT = '<quit>'
 
 # Instruction message
 INSTRUCTIONS = 'Instructions:\n[#1] to show all avaliable rooms\n'\
-    + '[#2 room name] to join/switch to a room\n[#3] to quit\n'
+    + '[#2 room name] to join/switch to a room\n[#3 room name] to leave a room\n[#4] to quit\n'
 
 
 
@@ -178,120 +178,72 @@ class Lobby:
                 # Obtain the selected room name
                 roomName = message.split()[1]
 
-                # Check if client just entered red
+                # Check if client just entered "red room"
                 if roomName == 'red':
-                    # Add the client to the selected room
-                    self.rooms[0].clients.append(client)
-                    # Welcome the client to the selected room
-                    self.rooms[0].welcome(client)
-                    # Add the client to the room mapping
-                    self.roomMapping[client.name] = redRoom
+                    # Add the client to the red room
+                    self.clientToRoom(client, 0, redRoom)
 
-                # Check if client just entered red
+                # Check if client just entered "blue room"
                 if roomName == 'blue':
-                    # Add the client to the selected room
-                    self.rooms[1].clients.append(client)
-                    # Welcome the client to the selected room
-                    self.rooms[1].welcome(client)
-                    # Add the client to the room mapping
-                    self.roomMapping[client.name] = blueRoom
+                    # Add the client to the blue room
+                    self.clientToRoom(client, 1, blueRoom)
 
-                # Check if client just entered red
+                # Check if client just entered "yellow room"
                 if roomName == 'yellow':
-                    # Add the client to the selected room
-                    self.rooms[2].clients.append(client)
-                    # Welcome the client to the selected room
-                    self.rooms[2].welcome(client)
-                    # Add the client to the room mapping
-                    self.roomMapping[client.name] = yellowRoom
+                    # Add the client to the yellow room
+                    self.clientToRoom(client, 2, yellowRoom)
 
-                # Check if client just entered red
+                # Check if client just entered "green room"
                 if roomName == 'green':
-                    # Add the client to the selected room
-                    self.rooms[3].clients.append(client)
-                    # Welcome the client to the selected room
-                    self.rooms[3].welcome(client)
-                    # Add the client to the room mapping
-                    self.roomMapping[client.name] = greenRoom
+                    # Add the client to the green room
+                    self.clientToRoom(client, 3, greenRoom)
 
-                # Check if client just entered red
+                # Check if client just entered "purple room"
                 if roomName == 'purple':
-                    # Add the client to the selected room
-                    self.rooms[4].clients.append(client)
-                    # Welcome the client to the selected room
-                    self.rooms[4].welcome(client)
-                    # Add the client to the room mapping
-                    self.roomMapping[client.name] = purpleRoom
+                    # Add the client to the purple room
+                    self.clientToRoom(client, 4, purpleRoom)
 
-                # Check if client just entered red
+                # Check if client just entered "orange room"
                 if roomName == 'orange':
-                    # Add the client to the selected room
-                    self.rooms[5].clients.append(client)
-                    # Welcome the client to the selected room
-                    self.rooms[5].welcome(client)
-                    # Add the client to the room mapping
-                    self.roomMapping[client.name] = orangRoom
+                    # Add the client to the orange room
+                    self.clientToRoom(client, 5, orangeRoom)
 
             # Handle partial invalid usage of the command
             elif len(message.split()) == 2:
-                # Check if client just entered red
+                # Check if client just entered "red"
                 if 'red' in message:
-                    # Add the client to the selected room
-                    self.rooms[0].clients.append(client)
-                    # Welcome the client to the selected room
-                    self.rooms[0].welcome(client)
-                    # Add the client to the room mapping
-                    self.roomMapping[client.name] = redRoom
+                    # Add the client to the red room
+                    self.clientToRoom(client, 0, redRoom)
 
-                # Check if client just entered blue
+                # Check if client just entered "blue"
                 if 'blue' in message:
-                    # Add the client to the selected room
-                    self.rooms[1].clients.append(client)
-                    # Welcome the client to the selected room
-                    self.rooms[1].welcome(client)
-                    # Add the client to the room mapping
-                    self.roomMapping[client.name] = blueRoom
+                    # Add the client to the blue room
+                    self.clientToRoom(client, 1, blueRoom)
 
-                # Check if client just entered yellow
+                # Check if client just entered "yellow"
                 if 'yellow' in message:
-                    # Add the client to the selected room
-                    self.rooms[2].clients.append(client)
-                    # Welcome the client to the selected room
-                    self.rooms[2].welcome(client)
-                    # Add the client to the room mapping
-                    self.roomMapping[client.name] = yellowRoom
+                    # Add the client to the yellow room
+                    self.clientToRoom(client, 2, yellowRoom)
 
-                # Check if client just entered green
+                # Check if client just entered "green"
                 if 'green' in message:
-                    # Add the client to the selected room
-                    self.rooms[3].clients.append(client)
-                    # Welcome the client to the selected room
-                    self.rooms[3].welcome(client)
-                    # Add the client to the room mapping
-                    self.roomMapping[client.name] = greenRoom
+                    # Add the client to the green room
+                    self.clientToRoom(client, 3, greenRoom)
 
-                # Check if client just entered purple
+                # Check if client just entered "purple"
                 if 'purple' in message:
-                    # Add the client to the selected room
-                    self.rooms[4].clients.append(client)
-                    # Welcome the client to the selected room
-                    self.rooms[4].welcome(client)
-                    # Add the client to the room mapping
-                    self.roomMapping[client.name] = purpleRoom
+                    # Add the client to the purple room
+                    self.clientToRoom(client, 4, purpleRoom)
 
-                # Check if client just entered orange
+                # Check if client just entered "orange"
                 if 'orange' in message:
-                    # Add the client to the selected room
-                    self.rooms[5].clients.append(client)
-                    # Welcome the client to the selected room
-                    self.rooms[5].welcome(client)
-                    # Add the client to the room mapping
-                    self.roomMapping[client.name] = orangeRoom
+                    # Add the client to the orange room
+                    self.clientToRoom(client, 5, orangeRoom)
 
             # Otherwise invalid usage of the command
             else:
                 # Message to the client
-                message = '\n\n\n\n\n\n\n\n\n\n\nPlease choose a valid room to enter\n'
+                message = '\n\nPlease choose a valid room to enter\n'
                 # Loop through the listed rooms
                 i = 0
                 while i < 6:
@@ -305,9 +257,66 @@ class Lobby:
                 # Send the intructions to the user
                 client.socket.sendall(message.encode())
 
+        # Check for the leave room command
+        elif '#3' in message:
+            # Check if the client is currently in a room
+            if client.name in self.roomMapping:
+                # Obtain the room mapping information
+                infoMapping = self.roomMapping[client.name]
+                # Obtain the room the client is leaving
+                leaving = message.split()[1]
+
+                # Check if the client is leaving the red room
+                if leaving == 'red':
+                    # Leave the red room
+                    self.clientOutRoom(client, 0)
+                    message = '\n\nYou left the red room\n'
+
+                # Check if the client is leaving the blue room
+                if leaving == 'blue':
+                    # Leave the blue room
+                    self.clientOutRoom(client, 1)
+                    message = '\n\nYou left the blue room\n'
+
+                # Check if the client is leaving the yellow room
+                if leaving == 'yellow':
+                    # Leave the yellow room
+                    self.clientOutRoom(client, 2)
+                    message = '\n\nYou left the yellow room\n'
+
+                # Check if the client is leaving the green room
+                if leaving == 'green':
+                    # Leave the green room
+                    self.clientOutRoom(client, 3)
+                    message = '\n\nYou left the green room\n'
+
+                # Check if the client is leaving the purple room
+                if leaving == 'purple':
+                    # Leave the purple room
+                    self.clientOutRoom(client, 4)
+                    message = '\n\nYou left the purple room\n'
+
+                # Check if the client is leaving the orange room
+                if leaving == 'orange':
+                    # Leave the orange room
+                    self.clientOutRoom(client, 5)
+                    message = '\n\nYou left the orange room\n'
+
+                # Create instruction message
+                message += INSTRUCTIONS
+                # Send intructions to the client
+                client.socket.sendall(message.encode())
+
+            # Otherwise invalid usage of the command
+            else:
+                # Create invalid input message (client not in room) to sent back to client, with instructions
+                message = '\n\nYour not currently in a room. Please select one of the following instructions.\n'
+                message += INSTRUCTIONS
+                # Send the invalid user input message screen back
+                client.socket.sendall(message.encode())
 
         # Check for the quit command
-        elif '#3' in message:
+        elif '#4' in message:
             # Send the quit message back to the client
             client.socket.sendall(QUIT.encode())
             # Remove the client from there room
@@ -353,7 +362,7 @@ class Lobby:
             # Otherwise user input invalid command
             else:
                 # Create invalid input message to sent back to client, with instructions
-                message = '\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nInvalid user input. Please select one of the following instructions.\n\n'
+                message = '\n\nInvalid user input. Please select one of the following instructions.\n\n'
                 message += INSTRUCTIONS
                 # Send the invalid user input message screen back
                 client.socket.sendall(message.encode())
@@ -373,48 +382,61 @@ class Lobby:
             # Check if the client is in the red room
             if 'red' in infoMapping.name:
                 # Remove the client from the red room
-                self.rooms[0].removeClient(client)
-                # Delete the client from the room mapping set
-                del self.roomMapping[client.name]
+                self.clientOutRoom(client, 0)
 
             # Check if the client is in the blue room
             if 'blue' in infoMapping.name:
-                # Remove the client from the red room
-                self.rooms[1].removeClient(client)
-                # Delete the client from the room mapping set
-                del self.roomMapping[client.name]
+                # Remove the client from the blue room
+                self.clientOutRoom(client, 1)
 
             # Check if the client is in the yellow room
             if 'yellow' in infoMapping.name:
-                # Remove the client from the red room
-                self.rooms[2].removeClient(client)
-                # Delete the client from the room mapping set
-                del self.roomMapping[client.name]
+                # Remove the client from the yellow room
+                self.clientOutRoom(client, 2)
 
             # Check if the client is in the green room
             if 'green' in infoMapping.name:
-                # Remove the client from the red room
-                self.rooms[3].removeClient(client)
-                # Delete the client from the room mapping set
-                del self.roomMapping[client.name]
+                # Remove the client from the green room
+                self.clientOutRoom(client, 3)
 
             # Check if the client is in the purple room
             if 'purple' in infoMapping.name:
-                # Remove the client from the red room
-                self.rooms[4].removeClient(client)
-                # Delete the client from the room mapping set
-                del self.roomMapping[client.name]
+                # Remove the client from the purple room
+                self.clientOutRoom(client, 4)
 
             # Check if the client is in the orange room
             if 'orange' in infoMapping.name:
-                # Remove the client from the red room
-                self.rooms[5].removeClient(client)
-                # Delete the client from the room mapping set
-                del self.roomMapping[client.name]
+                # Remove the client from the orange room
+                self.clientOutRoom(client, 5)
 
         # Otherwise the client is in the lobby, so display bye message
         print 'Client: ' + client.name + ' has left the server\n'
 
+    #---------------------------------------------------------------------------
+    # Function:     clientToRoom
+    # Input(s):
+    # Output:
+    # Description:
+    #---------------------------------------------------------------------------
+    def clientToRoom(self, client, roomIndex, roomClass):
+        # Add the client to the selected room
+        self.rooms[roomIndex].clients.append(client)
+        # Welcome the client to the selected room
+        self.rooms[roomIndex].welcome(client)
+        # Add the client to the room mapping
+        self.roomMapping[client.name] = roomClass
+
+    #---------------------------------------------------------------------------
+    # Function:     clientOutRoom
+    # Input(s):
+    # Output:
+    # Description:
+    #---------------------------------------------------------------------------
+    def clientOutRoom(self, client, roomIndex):
+        # Remove the client from the red room
+        self.rooms[roomIndex].removeClient(client)
+        # Delete the client from the room mapping set
+        del self.roomMapping[client.name]
 
 
 # Create the room object - a room to enter from the lobby that contains clients
