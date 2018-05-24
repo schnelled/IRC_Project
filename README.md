@@ -27,26 +27,12 @@ __User Manual:__
 2) Install python2 if it's not already installed
 3) Start the IRC_Server (Chat server)
 
-<pre>
-  <div class="container">
-    <div class="title">
-      <h4>Staring IRC_Server.py</h4>
-      <div class="code">
         python2 IRC_Server.py
-      </div>
-    </div>
-  </div>
-</pre>
+
 
 4) Start the IRC_Client (Chat client)
 
-<pre>
-  <div class="container">
-    <div class="title">
-      <h4>Starting IRC_Client.py</h4>
-      <div class="code">
-        python2 IRC_Client.py
-      </div>
-    </div>
-  </div>
-</pre>
+        python2 IRC_Client.py <host name>
+        
+A slash screen with instructions should appear, if connection was successful
+
