@@ -35,10 +35,9 @@ if __name__ == '__main__':
     # Create and connect client socket
     clientSocket = IRC_Support.makeClientSocket(clientSocket, sys.argv[1])
 
-    # Create entry for the connection list
-    connectionList = [sys.stdin, clientSocket]
-
     while True:
+        # Create entry for the connection list
+        connectionList = [sys.stdin, clientSocket]
 
         # Handle the socket list functions during connection
         read_sockets, write_sockets, error_sockets = select.select(connectionList, [], [])

@@ -43,7 +43,7 @@ if __name__ == '__main__':
             # Otherwise handle the new message
             else:
                 # Recieve the message from the client
-                message = newClient.socket.recv(IRC_Support.BUFFER)
+                message = client.recv(IRC_Support.BUFFER)
 
                 # Check for valid message
                 if message:
@@ -55,7 +55,7 @@ if __name__ == '__main__':
                 # Otherwise kill the client
                 else:
                     # Close the client socket
-                    newClient.socket.close()
+                    client.close()
                     # Remove client from connection list
                     IRC_Support.CONNECTION_LIST.remove(client)
 
