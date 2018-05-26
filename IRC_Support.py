@@ -8,12 +8,8 @@ PORT = 5000
 MAX_CLIENT = 10
 CONNECTION_LIST = []
 BUFFER = 4096
-BLUE = 'blue room'
-RED = 'red room'
-YELLOW = 'yellow room'
-GREEN = 'green room'
-PURPLE = 'purple room'
-ORANGE = 'orange room'
+DEFAULT_ROOM = ['red', 'blue', 'yellow', 'green', 'purple', 'orange']
+DEFAULT_NUMBER = 6
 QUIT = '<quit>'
 
 # Instruction message
@@ -140,7 +136,7 @@ class Lobby:
 
         # Loop through the listed rooms
         i = 0
-        while i < 6:
+        while i < DEFAULT_NUMBER:
             # Concatinate the message with each avaliable room
             message += self.rooms[i].name + ' room\n'
             #Increment the value of i by 1
@@ -188,29 +184,34 @@ class Lobby:
                     self.clientToRoom(client, 0, redRoom)
 
                 # Check if client just entered "blue room"
-                if roomName == 'blue':
+                elif roomName == 'blue':
                     # Add the client to the blue room
                     self.clientToRoom(client, 1, blueRoom)
 
                 # Check if client just entered "yellow room"
-                if roomName == 'yellow':
+                elif roomName == 'yellow':
                     # Add the client to the yellow room
                     self.clientToRoom(client, 2, yellowRoom)
 
                 # Check if client just entered "green room"
-                if roomName == 'green':
+                elif roomName == 'green':
                     # Add the client to the green room
                     self.clientToRoom(client, 3, greenRoom)
 
                 # Check if client just entered "purple room"
-                if roomName == 'purple':
+                elif roomName == 'purple':
                     # Add the client to the purple room
                     self.clientToRoom(client, 4, purpleRoom)
 
                 # Check if client just entered "orange room"
-                if roomName == 'orange':
+                elif roomName == 'orange':
                     # Add the client to the orange room
                     self.clientToRoom(client, 5, orangeRoom)
+
+                # Otherwise invalid room name was chosen
+                else:
+                    # Send message to client to choose a valid room
+                    self.invalidRoom(client)
 
             # Handle partial invalid usage of the command
             elif len(message.split()) == 2:
@@ -220,46 +221,39 @@ class Lobby:
                     self.clientToRoom(client, 0, redRoom)
 
                 # Check if client just entered "blue"
-                if 'blue' in message:
+                elif 'blue' in message:
                     # Add the client to the blue room
                     self.clientToRoom(client, 1, blueRoom)
 
                 # Check if client just entered "yellow"
-                if 'yellow' in message:
+                elif 'yellow' in message:
                     # Add the client to the yellow room
                     self.clientToRoom(client, 2, yellowRoom)
 
                 # Check if client just entered "green"
-                if 'green' in message:
+                elif 'green' in message:
                     # Add the client to the green room
                     self.clientToRoom(client, 3, greenRoom)
 
                 # Check if client just entered "purple"
-                if 'purple' in message:
+                elif 'purple' in message:
                     # Add the client to the purple room
                     self.clientToRoom(client, 4, purpleRoom)
 
                 # Check if client just entered "orange"
-                if 'orange' in message:
+                elif 'orange' in message:
                     # Add the client to the orange room
                     self.clientToRoom(client, 5, orangeRoom)
 
+                # Otherwise invalid room name was chosen
+                else:
+                    # Send message to client to choose a valid room
+                    self.invalidRoom(client)
+
             # Otherwise invalid usage of the command
             else:
-                # Message to the client
-                message = '\n\nPlease choose a valid room to enter\n'
-                # Loop through the listed rooms
-                i = 0
-                while i < 6:
-                    # Concatinate the message with each avaliable room
-                    message += self.rooms[i].name + ' room\n'
-                    #Increment the value of i by 1
-                    i += 1
-
-                #Concatinate the instructions to the message
-                message += '\n' + INSTRUCTIONS
-                # Send the intructions to the user
-                client.socket.sendall(message.encode())
+                # Send message to client to choose a valid room
+                self.invalidRoom(client)
 
         # Check for the leave room command
         elif '#3' in message:
@@ -277,34 +271,39 @@ class Lobby:
                     message = '\n\nYou left the red room\n'
 
                 # Check if the client is leaving the blue room
-                if leaving == 'blue':
+                elif leaving == 'blue':
                     # Leave the blue room
                     self.clientOutRoom(client, 1)
                     message = '\n\nYou left the blue room\n'
 
                 # Check if the client is leaving the yellow room
-                if leaving == 'yellow':
+                elif leaving == 'yellow':
                     # Leave the yellow room
                     self.clientOutRoom(client, 2)
                     message = '\n\nYou left the yellow room\n'
 
                 # Check if the client is leaving the green room
-                if leaving == 'green':
+                elif leaving == 'green':
                     # Leave the green room
                     self.clientOutRoom(client, 3)
                     message = '\n\nYou left the green room\n'
 
                 # Check if the client is leaving the purple room
-                if leaving == 'purple':
+                elif leaving == 'purple':
                     # Leave the purple room
                     self.clientOutRoom(client, 4)
                     message = '\n\nYou left the purple room\n'
 
                 # Check if the client is leaving the orange room
-                if leaving == 'orange':
+                elif leaving == 'orange':
                     # Leave the orange room
                     self.clientOutRoom(client, 5)
                     message = '\n\nYou left the orange room\n'
+
+                # Otherwise invalid room choosen
+                else:
+                    # Invalid choice message
+                    message = '\n\nThat room doesn\'t exist\n'
 
                 # Create instruction message
                 message += INSTRUCTIONS
@@ -442,6 +441,28 @@ class Lobby:
         # Delete the client from the room mapping set
         del self.roomMapping[client.name]
 
+    #---------------------------------------------------------------------------
+    # Function:     invalidRoom
+    # Input(s):
+    # Output:
+    # Description:
+    #---------------------------------------------------------------------------
+    def invalidRoom(self, client):
+        # Message to the client
+        message = '\n\nPlease choose a valid room to enter\n'
+        # Loop through the listed rooms
+        i = 0
+        while i < DEFAULT_NUMBER:
+            # Concatinate the message with each avaliable room
+            message += self.rooms[i].name + ' room\n'
+            #Increment the value of i by 1
+            i += 1
+
+        #Concatinate the instructions to the message
+        message += '\n' + INSTRUCTIONS
+        # Send the intructions to the user
+        client.socket.sendall(message.encode())
+
 
 # Create the room object - a room to enter from the lobby that contains clients
 class Room:
@@ -506,12 +527,12 @@ class Room:
 
 
 # Create the avaliable rooms
-redRoom = Room(RED.split()[0])
-blueRoom = Room(BLUE.split()[0])
-yellowRoom = Room(YELLOW.split()[0])
-greenRoom = Room(GREEN.split()[0])
-purpleRoom = Room(PURPLE.split()[0])
-orangeRoom = Room(ORANGE.split()[0])
+redRoom = Room(DEFAULT_ROOM[0])
+blueRoom = Room(DEFAULT_ROOM[1])
+yellowRoom = Room(DEFAULT_ROOM[2])
+greenRoom = Room(DEFAULT_ROOM[3])
+purpleRoom = Room(DEFAULT_ROOM[4])
+orangeRoom = Room(DEFAULT_ROOM[5])
 
 
 # Create the client object - a individual ID to each connection

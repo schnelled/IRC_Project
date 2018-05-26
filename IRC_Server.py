@@ -64,4 +64,4 @@ if __name__ == '__main__':
             # Close the socket
             sock.close()
             # Remove socket from connection list
-            IRC_Support.CONNECTION_LIST(client)
+            IRC_Support.CONNECTION_LIST(sock)
