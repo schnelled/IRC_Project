@@ -1,8 +1,31 @@
-#Internet Chat Relay Utilities
+#Internet Chat Relay Utilities - Containing support function for the IRC project
+#List of functions:
+#   print_machine_info() - Displays the machines host name & ip address
+#       information for client connection.
+#
+#   createSocket() - Create a default socket object that can then be used to
+#       setup as a client or a server for the internet chat relay.
+#
+#   serverSetup(sock) - Sets up the server using a pre-created socket object.
+#
+#   clientSetup(sock, host) - Sets up the client for connection using a
+#       pre-created socket object.
+#
+#   clientPrompt() - Displays the command prompt to the client.
+#
+#   displayConnections() - Display the socket connections connected to the
+#       server for debug.
+#
+#   deleteConnection(client) - Remove the socket connection from the server
+#       connections list.
+#
+#   newConnection(sockfd, addr) - Display the address and socket file descriptor
+#       information for debug.
 
 #Import needed libraries
 import socket, sys, string
 
+#Define globals for utilities module
 CONNECTION_LIST = []
 STATIC_ROOM = ['red', 'blue', 'yellow', 'green', 'purple', 'orange']
 DEFAULT_NUMBER = 6
@@ -15,7 +38,7 @@ QUIT = "<quit>"
 #Function:      print_machine_info
 #Input:         none
 #Output:        none
-#Description:   Displays the machines host name and ip address
+#Description:   Displays the machines host name & ip address
 #-------------------------------------------------------------------------------
 def print_machine_info():
     # Obtain hostname and IP address
@@ -29,7 +52,7 @@ def print_machine_info():
 #-------------------------------------------------------------------------------
 #Function:      createSocket
 #Input:         none
-#Output:        sock -
+#Output:        sock - The socket created from the function
 #Description:   Create a default socket object that can then be used to setup as
 #               a client or a server for the internet chat relay
 #-------------------------------------------------------------------------------
@@ -53,8 +76,8 @@ def createSocket():
 
 #-------------------------------------------------------------------------------
 #Function:      serverSetup
-#Input:         sock -
-#Output:        sock -
+#Input:         sock - The socket to be setup as a server
+#Output:        sock - The setup server socket
 #Description:   Sets up the server using a pre-created socket object
 #-------------------------------------------------------------------------------
 def serverSetup(sock):
@@ -91,9 +114,9 @@ def serverSetup(sock):
 
 #-------------------------------------------------------------------------------
 #Function:      clientSetup
-#Input:         sock -
-#               host -
-#Output:        sock -
+#Input:         sock - The socket to be setup as a client
+#               host -  The host the client is binding to
+#Output:        sock - The client socket setup/binded to the server
 #Description:   Sets up the client for connection using a pre-created socket
 #               object
 #-------------------------------------------------------------------------------
@@ -118,10 +141,10 @@ def clientSetup(sock, host):
     return sock
 
 #-------------------------------------------------------------------------------
-#Function:      printConnections
+#Function:      clientPrompt
 #Input:         none
 #Output:        none
-#Description:
+#Description:   Displays the command prompt to the client
 #-------------------------------------------------------------------------------
 def clientPrompt():
     sys.stdout.write("> ")
@@ -131,7 +154,7 @@ def clientPrompt():
 #Function:      displayConnections
 #Input:         none
 #Output:        none
-#Description:
+#Description:   Display the socket connections connected to the server for debug
 #-------------------------------------------------------------------------------
 def displayConnections():
     #Display the title of the message
@@ -142,9 +165,9 @@ def displayConnections():
 
 #-------------------------------------------------------------------------------
 #Function:      deleteConnection
-#Input:         none
+#Input:         client - The socket to be removed from the connection list
 #Output:        none
-#Description:
+#Description:   Remove the socket connection from the server connections list
 #-------------------------------------------------------------------------------
 def deleteConnection(client):
     #Loop through the connection list
@@ -157,10 +180,11 @@ def deleteConnection(client):
 
 #-------------------------------------------------------------------------------
 #Function:      newConnection
-#Input:         sockfd -
-#               addr -
+#Input:         sockfd - The socket file descriptor created
+#               addr - The socket address information
 #Output:        none
-#Description:
+#Description:   Display the address and socket file descriptor information for
+#               debug
 #-------------------------------------------------------------------------------
 def newConnection(sockfd, addr):
     #Print connection information about the new connection to the server
