@@ -5,11 +5,11 @@ import socket, select
 import Utilities
 from Class import Lobby, Client
 
-# Check to see if the script is being run directly or add as a module
+#Check to see if the script is being run directly or add as a module
 if __name__ == '__main__':
 
     #Server startup message
-    print "Staring up the server"
+    print 'Staring up the server'
 
     #Create a TCP socket using IPv4
     serverSocket = Utilities.createSocket()

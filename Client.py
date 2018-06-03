@@ -4,20 +4,20 @@
 import socket, sys, select
 import Utilities
 
-# Check to see if the script is being run directly or add as a module
+#Check to see if the script is being run directly or add as a module
 if __name__ == '__main__':
 
     #Server startup message
-    print "Staring up the client"
+    print 'Staring up the client'
 
     #Check for proper usage of the client program
     if(len(sys.argv) < 2):
         #Display and handle the error for wrong usage
-        print "Usage: pyhton2 Client.py [hostname]"
+        print 'Usage: pyhton2 Client.py [hostname]'
         sys.exit()
 
     #Set the prefix
-    prefix = ""
+    prefix = ''
 
     #Host name of the server
     host = sys.argv[1]
@@ -46,28 +46,28 @@ if __name__ == '__main__':
                 #Check if message is nothing (error)
                 if not msg:
                     #Display and handle the error
-                    print "Disconnected from chat server"
+                    print 'Disconnected from chat server'
                     sys.exit()
 
                 #Otherwise handle the valid message transmitted from the server
                 else:
-                    # Check for quit message
+                    #Check for quit message
                     if msg == Utilities.QUIT:
-                        # Say goodbye to the client and exit
+                        #Say goodbye to the client and exit
                         sys.stdout.write('\nGoodbye, chat with you later\n')
                         sys.exit()
 
-                    # Otherwise handle the greating or normal message states
+                    #Otherwise handle the greating or normal message states
                     else:
                         #Display the message to the client
                         sys.stdout.write(msg.decode())
 
                         #Check if the client is new
-                        if "Please tell us your name" in msg.decode():
-                            prefix = "name: "
+                        if 'Please tell us your name' in msg.decode():
+                            prefix = 'name: '
                             #Otherwise the client is not new
                         else:
-                            prefix = ""
+                            prefix = ''
 
                         #Prompt the client
                         Utilities.clientPrompt()

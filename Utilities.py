@@ -177,6 +177,7 @@ def deleteConnection(client):
         if str(client) in currentEntry:
             #Delete the client from the connection list
             del CONNECTION_LIST[i]
+            i -= 1
 
 #-------------------------------------------------------------------------------
 #Function:      newConnection
