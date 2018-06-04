@@ -65,13 +65,12 @@ if __name__ == '__main__':
                         #Check if the client is new
                         if 'Please tell us your name' in msg.decode():
                             prefix = 'name: '
-                            #Otherwise the client is not new
+                        #Otherwise the client is not new
                         else:
                             prefix = ''
 
                         #Prompt the client
                         Utilities.clientPrompt()
-
 
             #Otherwise outgoing message
             else:

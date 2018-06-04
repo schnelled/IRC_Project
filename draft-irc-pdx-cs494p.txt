@@ -1,0 +1,223 @@
+﻿CS494											       D. Schnelle
+Internet Draft							    Portland State University
+Intended status: IRC Class Project Specification				June 4, 2018
+Expires: December 2018
+
+
+Internet Relay Chat Class Project
+draft-irc-pdx-cs494p.txt
+
+
+Abstract
+
+	This memo describes the communication protocol for an IRC-style client/server 	system for the Internetworking Protocol class at Portland State University.
+
+Status of this Memo
+
+	This Internet-Draft is submitted in full conformance with the provisions of 	BCP 78 and BCP 79. This document may not be modified, and derivative works of 	it may not be created, except to publish it as an RFC and to translate it 	into languages other than English.
+
+	Internet-Drafts are working documents of the Internet Engineering Task Force 	(IETF). Note that other groups may also distribute working documents as 	Internet-Drafts. 
+
+	The list of current Internet-Drafts is at: 	https://datatracker.ietf.org/doc/active/
+
+	The list of current Internet-Draft Shadow Directories is at:
+	https://www.ietf.org/shadow.html
+
+	Internet-Drafts are draft documents valid for a maximum of six months and may 	be updated, replaced, or obsoleted by other documents at any time. It’s 	inappropriate to use Internet-Draft as reference material or to cite them 	other than as “work in progress.”
+
+	This Internet-Draft will expire on December 4, 2018
+
+Copyright Notice
+
+	Copyright (c) 2018 IETF Trust and the persons identified as the document 	authors. All rights reserved.
+
+	This document is subject to BCP 78 and the IETF Trust's Legal Provisions 	Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect 	on the date of publication of this document. Please review these documents 	carefully, as they describe your rights and restrictions with respect to this 	document.
+
+
+Comments Submission
+	Comments are solicited and should be addresses to the author at 	schnelle@pdx.edu
+
+Table of Content
+
+	1. Introduction/Overview_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 2 
+	2. Conventions used in this document_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 3
+	3. Basic Information_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 3
+	4. Message Infrastructure _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+		4.1 Generic Message Format_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			4.1.1 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			4.1.2 Operation Codes (opcodes) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+		4.2 Error Message _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			4.2.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+			4.2.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			4.2.3 Error Codes _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+ 	5. Client Messages_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+		5.1 First message sent to the server_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			5.1.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			5.1.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _  
+		5.2 Listing Rooms _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			5.2.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			5.2.2 Response_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+		5.3 Joining Rooms _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			5.3.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			5.3.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+		5.4 Leaving a Room_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			5.4.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			5.4.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+		5.5 Sending Messages_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			5.5.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+			5.5.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+	6. Server Messages_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+		6.1 Listing Response_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			6.1.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+			6.1.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+		6.2 Forwarding Messages to Client(s)_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			6.2.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+			6.2.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+	7. Error Handling _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+	8. Conclusion _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+	9. Security Consideration _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+	References_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+	Acknowledgements_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+1. Introduction/Overview
+
+	This specification describes a Internet Relay Chat (IRC) protocol where the 	clients can can communicate with one another. The system uses a central 	server, which acts as a communication hub, to receive/transmit messages sent 	to it to the other connected clients.
+
+	Clients can join statically defined rooms which are setup by the server. The 	rooms are groups of clients that are subscribed to the same message stream. 	Meaning any message sent by a client to a room is forwarded to all of the 	clients current subscribed to that room.
+
+2. Conventions used in this document
+	The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, 	“SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be 	interpreted as described in RFC 2119 [RFC2119].
+
+	In this document, these words will appear with that interpretation only in 	ALL CAPS. Lower case uses of these words are not to be interpreted as 	carrying significance described in RFC 2119
+
+3. Basic Information
+
+	All communication described in this protocol occur over TCP/IP, with a server 	listening for connections on port 5000. The server MUST display connection 	information for incoming connections used in debugging. Clients connect to 	port 5000 and maintain a constant connection with the server. The client has 	options to send messages or requests to the server and the sever can reply in 	the same manor. The message protocol is inherently asynchronous. This means 	the client is free to transmit/receive messages at anytime. The sever is 	freely able to receive, handle, and transmit messages at any time as well.
+
+	As described in [4.2], the server may terminate the connection at any time 	for any reason and the clients will handle the termination gracefully. The 	clients may also terminate the connection at any time for any reason without 	effecting the connection of the other clients or host connection.
+
+	The server MAY choose to allow only a finite number of clients to connect. 	This is dependent on th implementation and resources of the host machine.
+
+4. Message Infrastructure
+
+4.1 Generic Message Format
+
+4.1.1 Field Definitions:
+
+4.1.2 Operation Codes (opcodes)
+
+4.2 Error Message
+
+4.2.1 Usage
+
+4.2.2 Field Definitions:
+
+4.2.3 Error Codes
+
+5. Client Messages
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Figure #: Client software flow diagram
+
+5.1 First message sent to server
+
+	#Check if the client is new
+	if 'Please tell us your name' in msg.decode():
+		prefix = 'name: '
+
+	#Prompt the client
+	Utilities.clientPrompt()
+
+	#Transmit the message to the server
+	msg = prefix + sys.stdin.readline()
+	clientSocket.sendall(msg.encode())
+
+5.1.1 Usage
+
+	Before more messages can be transmitted, a connecting client MUST provide a 	name to be identified as during the duration of the connection.
+
+	The server MUST match the client’s provided name, client.name(), with the 	socket connection from the client. This message SHOULD only be sent when the 	client first connects to the server and SHOULD NOT be sent again during the 	duration of the client’s connection
+
+5.1.2 Field Definitions:
+
+msg.encode() - 
+prefix - 
+Utilities.clientPrompt() - 
+sys.stdin.readline() - 
+clientSocket.sendall() - 
+
+5.2 Listing Rooms
+
+5.2.1 Usage
+
+5.2.2 Response
+
+5.3 Joining Rooms
+
+5.3.1 Usage
+
+5.3.2 Field Definitions:
+
+5.4 Leaving a Room
+
+5.4.1 Usage
+
+5.4.2 Field Definitions:
+
+5.5 Sending Messages
+
+5.5.1 Usage
+
+5.52 Field Definitions:
+
+6. Server Messages
+
+6.1 Listing Response
+
+6.2 Forwarding Messages to Client(s)
+
+7. Error Handling
+
+8. Conclusion 
+
+9. Security Consideration
+
+References
+
+Acknowledgements
+
