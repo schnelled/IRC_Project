@@ -603,7 +603,7 @@ class Lobby:
     #               client - Client that is already present to the room
     #Output:        none
     #Description:   Transmits to the client to let them know they're already in
-    #               in the selected room
+    #               the selected room
     #---------------------------------------------------------------------------
     def alreadyPresent(self, client):
         #Message to inform client they're already in the room selected

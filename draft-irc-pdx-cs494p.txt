@@ -1,6 +1,6 @@
-﻿CS494											       D. Schnelle
-Internet Draft							    Portland State University
-Intended status: IRC Class Project Specification				June 4, 2018
+﻿CS494										     D.Schnelle
+Internet Draft						    Portland State University
+Intended status: IRC Class Project Specification		   June 4, 2018
 Expires: December 2018
 
 
@@ -10,214 +10,499 @@ draft-irc-pdx-cs494p.txt
 
 Abstract
 
-	This memo describes the communication protocol for an IRC-style client/server 	system for the Internetworking Protocol class at Portland State University.
+	This memo describes the communication protocol for an IRC-style 	client/server system for the Internetworking Protocol class at 	Portland State University.
 
 Status of this Memo
 
-	This Internet-Draft is submitted in full conformance with the provisions of 	BCP 78 and BCP 79. This document may not be modified, and derivative works of 	it may not be created, except to publish it as an RFC and to translate it 	into languages other than English.
+	This Internet-Draft is submitted in full conformance with the 	provisions of BCP 78 and BCP 79. This document may not be 	modified, and derivative works of it may not be created, except 	to publish it as an RFC and to translate it into languages other 	than English.
 
-	Internet-Drafts are working documents of the Internet Engineering Task Force 	(IETF). Note that other groups may also distribute working documents as 	Internet-Drafts. 
+	Internet-Drafts are working documents of the Internet 	Engineering Task Force (IETF). Note that other groups may also 	distribute working documents as Internet-Drafts. 
 
 	The list of current Internet-Drafts is at: 	https://datatracker.ietf.org/doc/active/
 
 	The list of current Internet-Draft Shadow Directories is at:
 	https://www.ietf.org/shadow.html
 
-	Internet-Drafts are draft documents valid for a maximum of six months and may 	be updated, replaced, or obsoleted by other documents at any time. It’s 	inappropriate to use Internet-Draft as reference material or to cite them 	other than as “work in progress.”
+	Internet-Drafts are draft documents valid for a maximum of six 	months and may be updated, replaced, or obsoleted by other 	documents at any time. It’s inappropriate to use Internet-Draft 	as reference material or to cite them other than as “work in 	progress.”
 
 	This Internet-Draft will expire on December 4, 2018
 
+
+
 Copyright Notice
 
-	Copyright (c) 2018 IETF Trust and the persons identified as the document 	authors. All rights reserved.
+	Copyright (c) 2018 IETF Trust and the persons identified as the 	document authors. All rights reserved.
 
-	This document is subject to BCP 78 and the IETF Trust's Legal Provisions 	Relating to IETF Documents (http://trustee.ietf.org/license-info) in effect 	on the date of publication of this document. Please review these documents 	carefully, as they describe your rights and restrictions with respect to this 	document.
-
-
-Comments Submission
-	Comments are solicited and should be addresses to the author at 	schnelle@pdx.edu
+	This document is subject to BCP 78 and the IETF Trust's Legal 	Provisions Relating to IETF Documents 	(http://trustee.ietf.org/license-info) in effect on the date of 	publication of this document. Please review these documents 	carefully, as they describe your rights and restrictions with 	respect to this document.
 
 Table of Content
 
-	1. Introduction/Overview_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 2 
-	2. Conventions used in this document_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 3
-	3. Basic Information_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 3
-	4. Message Infrastructure _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-		4.1 Generic Message Format_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			4.1.1 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			4.1.2 Operation Codes (opcodes) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-		4.2 Error Message _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			4.2.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-			4.2.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			4.2.3 Error Codes _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
- 	5. Client Messages_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-		5.1 First message sent to the server_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			5.1.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			5.1.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _  
-		5.2 Listing Rooms _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			5.2.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			5.2.2 Response_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-		5.3 Joining Rooms _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			5.3.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			5.3.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-		5.4 Leaving a Room_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			5.4.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			5.4.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-		5.5 Sending Messages_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			5.5.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-			5.5.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-	6. Server Messages_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-		6.1 Listing Response_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			6.1.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-			6.1.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-		6.2 Forwarding Messages to Client(s)_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			6.2.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-			6.2.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
-	7. Error Handling _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-	8. Conclusion _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-	9. Security Consideration _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-	References_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
-	Acknowledgements_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+	1. Introduction/Overview_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _4 
+	2. Conventions used in this document_ _ _ _ _ _ _ _ _ _ _ _ _ _4
+	3. Basic Information_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _4
+	4. Message Infrastructure _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _5
+		4.1 Generic Message Format _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _5
+			4.1.1 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _5
+			4.1.2 Operation Codes (opcodes) _ _ _ _ _ _ _ _ _ _ _5
+		4.2 Error Message_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _6
+			4.2.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _6
+			4.2.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _6
+ 	5. Client Messages_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _6
+		5.1 First message sent to the server _ _ _ _ _ _ _ _ _ _ _6
+			5.1.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _6
+			5.1.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _7
+		5.2 Listing Rooms_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _7
+			5.2.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _7
+			5.2.2 Response_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _7
+		5.3 Showing the client room mapping_ _ _ _ _ _ _ _ _ _ _ _7
+			5.3.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _7
+			5.3.2 Response_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _8
+		5.4 Joining Rooms_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _8
+			5.4.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _8
+			5.4.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _9
+		5.5 Leaving a Room _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _9
+			5.5.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _9
+			5.5.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ 10
+		5.6 Leaving the server _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 10
+			5.6.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 10
+			5.6.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ 10
+		5.7 Sending Messages _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 11
+			5.7.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 11
+			5.7.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ 11
+	6. Server Messages_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 11
+		6.1 Receiving Messages _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 11
+			6.1.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 12
+			6.1.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ 12
+		6.2 Message Handling _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 12
+			6.2.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 12
+			6.2.2 Field Definitions _ _ _ _ _ _ _ _ _ _ _ _ _ _ 12
+	7. Classes: Lobby, Room, Client _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 13 
+		7.1 Class: Lobby _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 13
+			7.1.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 13
+			7.1.2 Class attributes_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 13
+			7.1.3 Class functions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 14
+		7.2 Class: Room_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 15
+			7.2.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 15
+			7.2.2 Class attributes_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 15
+			7.2.3 Class functions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 15
+		7.3 Class: Client_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 16 
+			7.3.1 Usage _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 16
+			7.3.2 Class attributes_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 16
+			7.3.3 Class functions _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 16
+	8. Error Handling _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 16
+	9. Conclusion _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 17
+	10. Security Consideration_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 17
+	Comments Submission _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 17
+	References_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 17
+
+
+
+
+
 
 1. Introduction/Overview
 
-	This specification describes a Internet Relay Chat (IRC) protocol where the 	clients can can communicate with one another. The system uses a central 	server, which acts as a communication hub, to receive/transmit messages sent 	to it to the other connected clients.
+	This specification describes a basic Internet Relay Chat (IRC) 	protocol. Clients have the ability to communicate with each 	other through chat rooms setup and hosted by the server. The 	usage of a central server allows for messages to be sent between 	other connected clients.
 
-	Clients can join statically defined rooms which are setup by the server. The 	rooms are groups of clients that are subscribed to the same message stream. 	Meaning any message sent by a client to a room is forwarded to all of the 	clients current subscribed to that room.
+	When clients first make a connection to the server machine they 	are welcomed to the lobby and presented with a list of available 	commands. The initial welcoming setups the clients information 	for the duration of the connection.
+
+	Clients can join rooms, which are groups of clients that are 	subscribed to the same message stream. Any messages sent to a 	room is broadcast to all clients currently occupying to the 	room.
+
 
 2. Conventions used in this document
-	The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL NOT”, “SHOULD”, 	“SHOULD NOT”, “RECOMMENDED”, “MAY”, and “OPTIONAL” in this document are to be 	interpreted as described in RFC 2119 [RFC2119].
 
-	In this document, these words will appear with that interpretation only in 	ALL CAPS. Lower case uses of these words are not to be interpreted as 	carrying significance described in RFC 2119
+	The key words “MUST”, “MUST NOT”, “REQUIRED”, “SHALL”, “SHALL 	NOT”, “SHOULD”, “SHOULD NOT”, “RECOMMENDED”, “MAY”, “OPTIONAL” 	in this document are to be interpreted as described in RFC 	2119 	[RFC2119].
+
+	In this document, these words will appear with that 	interpretation only when in ALL CAPS. Lower case uses of these 	words are not to be interpreted as carrying significance 	described in RFC 2119.
+
 
 3. Basic Information
 
-	All communication described in this protocol occur over TCP/IP, with a server 	listening for connections on port 5000. The server MUST display connection 	information for incoming connections used in debugging. Clients connect to 	port 5000 and maintain a constant connection with the server. The client has 	options to send messages or requests to the server and the sever can reply in 	the same manor. The message protocol is inherently asynchronous. This means 	the client is free to transmit/receive messages at anytime. The sever is 	freely able to receive, handle, and transmit messages at any time as well.
+	All communication described in this protocol occurs over a 	TCP/IP connection, with the server listening for connection on 	port 5000. Clients MUST connect to port 5000 and maintain a 	constant connection with the server until the client leaves. 	Clients can send both messages and requests to the server 	through the lobby object created during the setup of the server. 	The messaging protocol is inherently asynchronous meaning the 	client SHOULD be free to send messages to the server at any 	given time and the server MUST be able to handle the message 	received and transmit the message back asynchronously to the 	client.
 
-	As described in [4.2], the server may terminate the connection at any time 	for any reason and the clients will handle the termination gracefully. The 	clients may also terminate the connection at any time for any reason without 	effecting the connection of the other clients or host connection.
+	As is described in [4.2], both the server and client MAY safely 	terminate the connection at any time for any reason. The server 	MUST be able to handle the removal of a client for subscribed 	room for a terminating connection while not effecting the 	connection of other client.
 
-	The server MAY choose to allow only a finite number of clients to connect. 	This is dependent on th implementation and resources of the host machine.
+	The server MAY allow only a finite number of connection, 	depending on the implementation and resources of the host system 	deploying the server. The server MAY not allow more connections 	than what is specified during the setting up of the host 	machine.
+
 
 4. Message Infrastructure
 
 4.1 Generic Message Format
 
-4.1.1 Field Definitions:
+	socket.sendall(msg.encode())
 
-4.1.2 Operation Codes (opcodes)
+	4.1.1 Field Definitions
+
+socket – BSD socket interface used for connection.
+
+sendall – Method of sending data to the socket. Continuous to send data from string until all the data has been sent or an error occurs.
+
+msg.encode() - Method of encoding the message being sent.
+
+	4.1.2 Operation Codes
+
+		Used by the client to inform the server of what 					functionality the it's trying to implement.
+
+		Show all available rooms		= 1
+		Show the room mapping		= 2
+		Join a default room			= 3 [room name]
+		Leave a room				= 4 [room name]
+		Leave the server			= 5
+
+
 
 4.2 Error Message
 
-4.2.1 Usage
+	sock.close()
+     Utilities.deleteConnection(sock)
 
-4.2.2 Field Definitions:
+	4.2.1 Usage
 
-4.2.3 Error Codes
+		MAY be sent by either the server or the socket before 				closing the connection. If this message is received by the 			server then the client who sent the error message MUST be 			closed. If the message is received by the client, then the 			client's connection MUST be closed.
+
+	4.2.2 Field Definitions
+
+sock.close() - Method of closing the socket connection.
+
+Utilities.deleteConnection(sock) – Method of removing the connection from the connection list created by the server.
+
 
 5. Client Messages
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Figure #: Client software flow diagram
-
 5.1 First message sent to server
 
-	#Check if the client is new
 	if 'Please tell us your name' in msg.decode():
-		prefix = 'name: '
-
-	#Prompt the client
-	Utilities.clientPrompt()
-
-	#Transmit the message to the server
+     	prefix = 'name: '
 	msg = prefix + sys.stdin.readline()
-	clientSocket.sendall(msg.encode())
+     	clientSocket.sendall(msg.encode())
+	
+	5.1.1 Usage
 
-5.1.1 Usage
+		Before any message can be sent by the client the connecting 		client MUST provide the name to be used during the duration 		of the connection with the server.
 
-	Before more messages can be transmitted, a connecting client MUST provide a 	name to be identified as during the duration of the connection.
+		The server MUST match the client's name with the socket 			connection of the client. This message SHOULD only be sent 			during the initial connection with the server.
 
-	The server MUST match the client’s provided name, client.name(), with the 	socket connection from the client. This message SHOULD only be sent when the 	client first connects to the server and SHOULD NOT be sent again during the 	duration of the client’s connection
+	
 
-5.1.2 Field Definitions:
+	5.1.2 Field Definitions
 
-msg.encode() - 
-prefix - 
-Utilities.clientPrompt() - 
-sys.stdin.readline() - 
-clientSocket.sendall() - 
+prefix = 'name:' is concatenated to the message which identifies who the connecting client want to be identified as during the duration of the connection.
+
+sys.stdin.readline() is used in this case to read the name obtained through standard input. The client MUST hit enter after typing in the name that will be used to identify the client during the duration of the connection.
 
 5.2 Listing Rooms
 
-5.2.1 Usage
+	for i in range(Utilities.DEFAULT_NUMBER):
+     	msg += '|   ' + self.staticRooms[i].name + ' room\n'
+	client.socket.sendall(msg)
 
-5.2.2 Response
+	5.2.1 Usage
 
-5.3 Joining Rooms
+		Sent by the client to request a list of all of the 				available rooms. The client MUST send the number 1 to the 			server in order to list all of the available rooms.
 
-5.3.1 Usage
+	5.2.2 Response
 
-5.3.2 Field Definitions:
+		The server MUST return a list of all the available rooms to 		the requesting client. The client SHOULD at least list a 			minimum of 6 rooms.
 
-5.4 Leaving a Room
+5.2 Showing the client room mapping
 
-5.4.1 Usage
+	for x in range(len(self.redRoomMap)):
+     	msg += '|    ' + self.redRoomMap[x] + '\n'
 
-5.4.2 Field Definitions:
+	5.3.1 Usage
 
-5.5 Sending Messages
+		Sent by the client to request a list of the clients 				populating rooms. The list is only shown if a client is 			current subscribed to a room. This allows the client to see 		the rooms that they and other clients are currently 				occupying. The client MUST send the number 2 to the server 			in order to show the mapping of the rooms.
 
-5.5.1 Usage
+	5.3.2 Response
 
-5.52 Field Definitions:
+		The server MUST return a list of the rooms occupying a 			client. The list will contain the client's subscribed to 			the occupied room. If no client's are mapped then the 				client is information that not client's occupied a room and 		resend the command options.
+
+5.4 Joining Rooms
+
+	if roomName == 'red':
+		if client.name not in self.redRoomMap:
+			self.joinStaticRoom(client, 0)
+		else:
+			self.alreadyPresent(client)
+
+	5.4.1 Usage
+	
+		Sent by the client to join a specified chat room. A client 			MUST send the number 3 and the name of the room they're 			requesting to join. The client MAY leave off the word room 			from the request and the server MUST still understand the 			message. If the room doesn't exist then the client is 				prompted to select one of the available rooms. A list of 			the rooms the client can join is sent back from the server.
+
+		Upon joining a room, the server MUST append the client to 			the list of clients subscribed to the room. The server MUST 		send a randomly generated welcome message for the client to 		be broadcast to the other subscriber of the room. Lastly 			the sever MUST append the client's name to the rooms 				mapping, so the information can be shared with other 				clients requesting the mapping.
+
+		Every the mapping of the room becomes updated by the 				joining of a new client the server MUST send a message to 			all of the client subscribed to the room informing them of 			the new room membership.
+
+	
+
+
+	5.4.2 Field Definitions
+
+roomName – The name of the room the client is requesting to subscribe to.
+
+client.name – The name (id) of the client subscribing.
+ 
+self.redRoomMap – The list mapping of client’s subscribed to the room.
+
+self.joinStaticRoom – Member function that add the client to the selected room. Welcomes the client to the room and a notification message to other members of the room.
+
+self.alreadyPresent – Member function used to notify the client that they’re already subscribed to the selected room.
+
+5.5 Leaving a Room
+
+	if leaving == 'red':
+		if client.name in self.redRoomMap:
+			self.leaveStaticRoom(client, 0)
+               msg = '\nYou left the red room\n'
+
+	5.5.1 Usage
+
+		Sent by the client to leave a specified chat room. The 			client MUST send the number 4 and the name of the room they 		want to unsubscribe to. The server MUST check if the client 		is currently subscribed to the specified room.
+
+		When the server receives this message if the client is 			subscribed to the room the server MUST remove the client 			for the room's mapping. Otherwise the server sends a 				message to the client stating they're not subscribed to the 		specified room.
+
+		The server SHOULD ignore removing the client from a rooms 			mapping if they are only occupying the lobby.
+
+	
+5.5.2 Field Definitions
+
+leaving – The room the client is attempting to leave.
+
+client.name – The name (id) of the client attempting to leave the room.
+
+self.redRoomMap – The client mapping for the selected room.
+
+self.leaveStaticRoom – Member function that removes the client from the selected room’s mapping.
+
+msg – Message to the client confirming that they successfully left the room.
+
+5.6 Leaving the server
+
+	client.socket.sendall(Utilities.QUIT)
+	self.removeClient(client)
+
+	5.6.1 Usage
+
+		Sent by the client to leave the connection. The client MUST 		send the number 5 to the server. The server MUST check if 			the client is currently subscribed to any rooms.
+
+		When the server receives this message if the client is 			subscribed to any rooms the server MUST remove the client 			for those room's mappings.
+
+		The server SHOULD ignore removing the client from any room 			mappings if they are only occupying the lobby.
+
+	5.6.2 Field Definitions
+
+client.socket.sendall - Method of sending data to the client socket. Continuous to send data from string until all the data has been sent or an error occurs.
+
+Utilities.QUIT – The quit message string to safely kill the connection of the client.
+
+self.removeClient – Method function for removing the client from any subscribed room and the connection list.
+
+5.7 Sending Messages
+
+	if client.name in self.redRoomMap:
+		self.staticRooms[0].broadcastRoom(client, msg)
+
+	5.7.1 Usage
+
+		Sent by the client to send a text message room they're 			currently subscribed to.
+
+		The MUST send the message to all the clients in the 				specified room with the name of the client that sent the 			message, so clients can identify who sent the message 				within the room. The server MAY send the message to 				multiple rooms if the client is subscribed to them.
+
+	5.7.2 Field Definitions
+
+client.name – The name (id) of the client broadcasting to their subscribed rooms.
+
+self.redRoomMap – The mapping of the static room.
+
+self.staticRooms[i] – The list of available static rooms.
+
+broadcastRoom(client, msg) – Method function for broadcasting a message to every client in the subscribed room, except to the client that sent the message.
+
 
 6. Server Messages
 
-6.1 Listing Response
+6.1 Receiving Messages
 
-6.2 Forwarding Messages to Client(s)
+	for client in readClients:
+		msg = client.socket.recv(Utilities.RECV_BUFFER)
 
-7. Error Handling
+	
 
-8. Conclusion 
 
-9. Security Consideration
+	6.1.1 Usage
+
+		The server MUST wait for the client to sent a message to 			the server, so it can be handled. The server receives the 			data in 4k byte segments from the sending client. The 				server MUST be able to handle multiple messages from 				clients.
+
+	6.1.2 Field Definitions
+
+client – The client socket connection that is communicating with the server.
+
+readClients – The method of knowing when there is a client message of be received.
+
+msg – The message from the to be received.
+
+client.socket.recv(Utilities.RECV_BUFFER) – The method of receiving the message from the client socket.
+
+Utiltities.RECV_BUFFER – The size of the receiver buffer.
+
+6.2 Message Handling
+
+	for client in readClients:
+		lobby.handleMsg(client, msg.decode().lower())
+
+	6.2.1 Usage
+
+		The server MUST handle the message received from the client 		socket and handle the message appropriately. If the message 		is not valid then the server MUST terminate the connection 			of the client socket. Otherwise the server MUST handle the 			message appropriately.
+
+	6.2.2 Field Definitions
+
+client – The client socket connection that is communicating with the server.
+
+ReadClients - The method of knowing when there is a client message of be received.
+
+lobby.handleMsg – The method function for handling valid messages sent from the client.
+
+msg.decode().lower() - The standardizing of the message, so it can be appropriately handled by the server.
+
+
+7. Classes: Lobby, Room, Client
+
+7.1 Class: Lobby
+
+	def __init__(self):
+        self.staticRooms = [list of static rooms]
+        self.redRoomMap = []
+        self.blueRoomMap = []
+        self.yellowRoomMap = []
+        self.greenRoomMap = []
+        self.purpleRoomMap = []
+        self.orangeRoomMap = []
+        self.dynamicRooms = {}
+        self.dynamicRoomMap = {} 
+
+	7.1.1 Usage
+
+		The lobby class is used as a centralized hug for the client 		connections and is the method used by the server to handle 			client messages. There are methods for listing rooms, 				showing client mapping, leaving a room, leaving the server, 		and broadcasting messages. The lobby also displays the 			instructions to the client when needed. The lobby is made 			up of room instances.
+
+	7.1.2 Class attributes
+
+self.staticRooms – The list of room instances.
+
+self.redRoomMap – The client mapping for the red room.
+
+self.blueRoomMap -  The client mapping for the blue room.
+
+self.yellowRoomMap -  The client mapping for the yellow room.
+
+self.greenRoomMap -  The client mapping for the green room.
+
+self.purpleRoomMap -  The client mapping for the purple room.
+
+self.orangeRoomMap -  The client mapping for the orange room.
+
+	
+7.1.3 Class functions
+
+lobbyWelcome - Send the welcome message to the new client. In order to obtain the client's name.
+
+introduction - Send the welcome message to the new client. In order to obtain the client's name and display the lobby’s home page.
+
+handleMsg - Handle the message received from the client.
+
+splashScreen - Return a string message containing the slash menu with information on available commands(options).
+
+showRoom - Send a list of all the available rooms to the client.
+
+showRoomMapping - Send the room mappings to the client.
+
+removeLobby - Remove the client from all occupied rooms.
+
+joinStaticRoom - Client joins the selected room and is appended to the mapping.
+
+leaveStaticRoom - Client leaves the selected room they occupied and is removed from the mapping.
+
+invalidRoom - Tells the client they entered an invalid room name, then lists the available room, and displays the slash menu.
+
+alreadyPresent - Transmits to the client to let them know they're already in the selected room.
+
+
+7.2 Class: Room
+
+	def __init__(self, name):
+        self.clients = []
+        self.name = name	
+
+	7.2.1 Usage
+
+		The room class is used to broadcast messages to subscribed 			clients. There are multiple rooms to a lobby instance and 			they’re used for communication between client socket 				connections. There are methods for welcoming a client to a 			room, broadcasting a message to a room, and removing a 			client from a room.
+
+	7.2.2 Class attributes
+
+self.clients – List of clients subscribed to the room.
+
+self.name – The name given to uniquely identify the room.
+
+	7.2.3 Class functions
+
+roomWelcome -  Selects random introduction message for the room and sends the introduction message to everyone in the room.
+
+broadcastRoom - Broadcast the message to everyone in the room.
+
+removeClient - Removes the client from the room and send a message to everyone in the room that the client left.
+
+
+
+
+
+
+7.3 Class: Client
+
+	def __init__(self, socket, name= "guest"):
+        socket.setblocking(0)
+        self.socket = socket
+        self.name = name
+
+	7.3.1 Usage
+
+		The client class is used to create a unique identifier for 			every connecting client. The server MUST create a new 				client instance for every connecting client. That created 			instance will be used during the duration of the 					connection.
+
+	7.3.2 Class attributes
+
+socket.setblocking – Sets the client’s socket connection to non blocking, so it will never block other client connections.
+
+self.socket – The socket used by the client during the duration of the connection.
+
+self.name – The name (id) given to the socket connection.
+
+	7.3.3 Class functions
+
+fileno – Returns the fileno for the client's socket
+
+
+8. Error Handling
+
+	Both the server and the client MUST detect when the connection 	linking then together has been terminated. If the server detects 	that the client connection is killed, then the server MUST 	remove the client from all of their subscribed rooms. If the 	client detects that the connection has been killed with the 	server, then it MUST handle that server outage safely.
+
+
+
+
+
+9. Conclusion
+
+	This specification provides a generic message 	receiving/transmitting framework for multiple clients to 	communicate with each other through the central server.
+
+
+10. Security Consideration
+
+	Messages sent using this system have no protection against 	inspection, tampering or outright forgery. This server sees all 	messages that are sent between connections though the use of 		this service. Messages MAY be intercepted by a 3rd party that is 	able to capture network traffic.
+
+
+Comments Submission
+	Comments are solicited and should be addresses to the author at 	schnelle@pdx.edu
+
 
 References
 
-Acknowledgements
+	[RFC2119] Bradner, S., "Key words for use in RFCs to Indicate
+	Requirement Levels", BCP 14, RFC 2119, March 1997.
 
